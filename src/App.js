@@ -28,7 +28,10 @@ const App = () => {
 
   const connect = async () => {
     try {
-      const response = await fetch("https://fachatapp001.azurewebsites.net/api/GetToken");
+      if(user === "") throw new Error("Username non valido");
+
+      const response = await fetch(`https://fachatapp001.azurewebsites.net/api/GetTokenByUserId=${user}`);
+      // const response = await fetch(`http://localhost:7071/api/GetTokenByUserId?userId=${user}`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -37,18 +40,13 @@ const App = () => {
       const client = new WebPubSubClient({
         getClientAccessUrl: data.token,
       });
-      client.on("group-message", (e) => {
-        const data = e.message.data;
-        appendMessage(data);
-      });      
-      await client.start();
-      await client.joinGroup("chat");
 
-      const systemMessage = {
-        type: "USER_JOINED",
-        message: `${user} è entrato in chat`,
-      };
-      client.sendToGroup("chat", systemMessage, "json");
+      //Qui metto in ascolto il client per ricevere messaggi
+      //server-message è un evento predefinito di WebPubSub
+      client.on("server-message", (e) => {
+        alert(`${e.message.data.text} per l'utente ${e.message.data.userId}`);
+      });
+      await client.start();   
 
       setConnected(true);
       setClient(client);
@@ -57,18 +55,9 @@ const App = () => {
     }
   }
 
-  const send = () => {
-    const chat = {
-      from: user,
-      message: message,
-    };
-    client.sendToGroup("chat", chat, "json", { noEcho: true });
-    appendMessage(chat);
-    setMessage("");
-  }
-
-  const appendMessage = (data) => {
-    setChats((prev) => [...prev, data]);
+  const send = async () => {
+    // await fetch(`http://localhost:7071/api/FakeOperation?userId=${user}`);
+    await fetch(`https://fachatapp001.azurewebsites.net/api/FakeOperation=${user}`);
   }
 
   const loginPage = (
