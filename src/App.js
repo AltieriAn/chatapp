@@ -28,7 +28,7 @@ const App = () => {
 
   const connect = async () => {
     try {
-      const response = await fetch("http://localhost:7071/api/GetToken");
+      const response = await fetch("https://fachatapp001.azurewebsites.net/api/GetToken");
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
