@@ -30,7 +30,7 @@ const App = () => {
     try {
       if(user === "") throw new Error("Username non valido");
 
-      const response = await fetch(`https://fachatapp001.azurewebsites.net/api/GetTokenByUserId=${user}`);
+      const response = await fetch(`https://fachatapp001.azurewebsites.net/api/GetTokenByUserId?userId=${user}`);
       // const response = await fetch(`http://localhost:7071/api/GetTokenByUserId?userId=${user}`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -57,7 +57,7 @@ const App = () => {
 
   const send = async () => {
     // await fetch(`http://localhost:7071/api/FakeOperation?userId=${user}`);
-    await fetch(`https://fachatapp001.azurewebsites.net/api/FakeOperation=${user}`);
+    await fetch(`https://fachatapp001.azurewebsites.net/api/FakeOperation?userId=${user}`);
   }
 
   const loginPage = (
